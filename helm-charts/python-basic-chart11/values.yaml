@@ -1,0 +1,91 @@
+replicaCount: 1
+image:
+  repository: my-app
+  tag: latest
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+ingress:
+  enabled: true
+  host: my-app.example.com
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+env: {}
+namespace: default
+apiVersion: v2
+name: python-basic-chart
+type: application
+version: 1.0.0
+appVersion: 1.0.0
+description: Helm chart for python-basic deployment in kartik2882-dev namespace
+source: https://github.com/devfile-samples/devfile-sample-python-basic.git
+keywords: python, openshift, devfile
+maintainer: kartik2882
+global.namespace: kartik2882-dev
+global.imageRegistry: image-registry.openshift-image-registry.svc:5000
+app.name: python-test11
+app.partOf: python-sample-app
+app.runtime: python
+app.replicaCount: '1'
+app.image.repository: image-registry.openshift-image-registry.svc:5000/kartik2882-dev/python-basic
+app.image.tag: latest
+app.image.pullPolicy: IfNotPresent
+app.imageStream.enabled: 'True'
+app.imageStream.name: python-basic
+app.imageStream.tag: latest
+app.imageStream.from.kind: DockerImage
+app.imageStream.from.name: ghcr.io/devfile-samples/devfile-sample-python-basic:latest
+app.vcs.uri: https://github.com/devfile-samples/devfile-sample-python-basic.git
+app.vcs.ref: ''
+app.route.disabled: 'False'
+app.resources.limits.cpu: '1'
+app.resources.limits.memory: 1000Mi
+app.resources.requests.cpu: 10m
+app.resources.requests.memory: 50Mi
+app.service.enabled: 'True'
+app.service.type: ClusterIP
+app.service.port: '8080'
+app.service.targetPort: '8080'
+app.livenessProbe.enabled: 'True'
+app.livenessProbe.httpGet.path: /
+app.livenessProbe.httpGet.port: '8080'
+app.livenessProbe.initialDelaySeconds: '10'
+app.livenessProbe.periodSeconds: '15'
+app.livenessProbe.failureThreshold: '3'
+app.readinessProbe.enabled: 'True'
+app.readinessProbe.httpGet.path: /
+app.readinessProbe.httpGet.port: '8080'
+app.readinessProbe.initialDelaySeconds: '5'
+app.readinessProbe.periodSeconds: '10'
+app.readinessProbe.failureThreshold: '3'
+resourceQuotas.enabled: 'True'
+compute-build.limits.cpu: '20'
+compute-build.limits.memory: 14Gi
+compute-build.limits.nvidia.com/gpu: '0'
+compute-build.requests.cpu: '3'
+compute-build.requests.memory: 14Gi
+compute-build.requests.nvidia.com/gpu: '0'
+compute-deploy.limits.cpu: '30'
+compute-deploy.limits.memory: 30Gi
+compute-deploy.limits.nvidia.com/gpu: '0'
+compute-deploy.requests.cpu: '3'
+compute-deploy.requests.memory: 30Gi
+compute-deploy.requests.nvidia.com/gpu: '0'
+storage.count/persistentvolumeclaims: '10'
+storage.limits.ephemeral-storage: 15Gi
+storage.requests.ephemeral-storage: 15Gi
+storage.requests.storage: 80Gi
+limitRange.enabled: 'True'
+limitRange.name: resource-limits
+limitRange.type: Container
+limitRange.default.cpu: '1'
+limitRange.default.memory: 1000Mi
+limitRange.defaultRequest.cpu: 10m
+limitRange.defaultRequest.memory: 64Mi
