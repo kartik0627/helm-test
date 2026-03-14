@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "python-basic.labels" . | nindent 4 }}
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: "*"
+    app.openshift.io/route-disabled: {{ quote .Values.app.route.disabled }}
+    app.openshift.io/vcs-uri: {{ quote .Values.app.vcs.uri }}
+    app.openshift.io/vcs-ref: {{ quote .Values.app.vcs.ref }}
+    isFromDevfile: "true"
+    openshift.io/generated-by: "OpenShiftWebConsole"
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag",
+      "name":"{{ .Values.app.imageStream.name }}:{{ .Values.app.imageStream.tag }}",
+      "namespace":"{{ .Values.global.namespace }}"},
+      "fieldPath":"spec.template.spec.containers[?(@.name==\"{{ .Values.app.name }}\")].image",
+      "paused":false}]
+spec:
+  replicas: {{ .Values.app.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "python-basic.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "python-basic.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Values.app.name }}
+          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+          imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.app.service.targetPort }}
+              protocol: TCP
+          resources:
+            limits:
+              cpu: {{ .Values.app.resources.limits.cpu | quote }}
+              memory: {{ .Values.app.resources.limits.memory | quote }}
+            requests:
+              cpu: {{ .Values.app.resources.requests.cpu | quote }}
+              memory: {{ .Values.app.resources.requests.memory | quote }}
+          {{- if .Values.app.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.app.livenessProbe.httpGet.path }}
+              port: {{ .Values.app.livenessProbe.httpGet.port }}
+            initialDelaySeconds: {{ .Values.app.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.app.livenessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.app.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.app.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.app.readinessProbe.httpGet.path }}
+              port: {{ .Values.app.readinessProbe.httpGet.port }}
+            initialDelaySeconds: {{ .Values.app.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.app.readinessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.app.readinessProbe.failureThreshold }}
+          {{- end }}
