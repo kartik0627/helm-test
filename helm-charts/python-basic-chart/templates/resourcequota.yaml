@@ -1,0 +1,35 @@
+{{- if .Values.resourceQuotas.enabled }}
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: {{ .Values.resourceQuotas.computeBuild.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  hard:
+    {{- range $key, $val := .Values.resourceQuotas.computeBuild.hard }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: {{ .Values.resourceQuotas.computeDeploy.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  hard:
+    {{- range $key, $val := .Values.resourceQuotas.computeDeploy.hard }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: {{ .Values.resourceQuotas.storage.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  hard:
+    {{- range $key, $val := .Values.resourceQuotas.storage.hard }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+{{- end }}

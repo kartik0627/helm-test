@@ -1,0 +1,21 @@
+{{- if .Values.app.imageStream.enabled }}
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: {{ .Values.app.imageStream.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "python-basic.labels" . | nindent 4 }}
+spec:
+  lookupPolicy:
+    local: true
+  tags:
+    - name: {{ .Values.app.imageStream.tag }}
+      from:
+        kind: {{ .Values.app.imageStream.from.kind }}
+        name: {{ .Values.app.imageStream.from.name }}
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
+{{- end }}
