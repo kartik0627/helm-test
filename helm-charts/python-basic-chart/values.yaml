@@ -1,0 +1,32 @@
+replicaCount: 1
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: latest
+service:
+  type: ClusterIP
+  port: 80
+chart.name: python-basic-chart
+chart.type: ''
+chart.version: ''
+chart.appVersion: ''
+chart.apiVersion: ''
+chart.description: ''
+chart.source: ''
+chart.keywords: ''
+chart.maintainer: ''
+app.name: ''
+app.partOf: ''
+app.runtime: python
+app.replicaCount: ''
+app.image.repository: ''
+app.image.tag: ''
+app.image.pullPolicy: ''
+resourceQuotas.enabled: ''
+resourceQuotas.computeBuild.limits.cpu: ''
+resourceQuotas.computeBuild.limits.memory: ''
+resourceQuotas.computeBuild.limits.nvidia.com/gpu: ''
+resourceQuotas.computeBuild.requests.cpu: ''
+resourceQuotas.computeBuild.requests.memory: ''
+resourceQuotas.computeBuild.requests.nvidia.com/gpu: ''
+resourceQuotas.computeDeploy.enabled: ''
